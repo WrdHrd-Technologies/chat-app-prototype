@@ -1,3 +1,39 @@
+/**
+
+* Brief : Brief Description of the file
+
+* Release : Release version (0.0.1)
+
+* Author : Sahibjot Singh
+
+* Written : 08/02/2022
+
+* Last Revision : 09/02/2022
+
+* ------------------------------- ChangeLog -----------------------------*
+
+* [Version] [Date dd/mm/yy] [INITIALS] [TICKET] [Description of work done]
+
+* ------------------------------- Modifications -----------------------------*
+
+* [Version] [Date dd/mm/yy] [INITIALS] [TICKET] [Description of work done]
+
+* ------------------------------- Includes -----------------------------*
+
+* relative/path/to/fle
+
+* ------------------------------- Called From -----------------------------*
+
+* BasicChatApp\src\screens\Scn_Chat.js
+
+* ------------------------------- Copyright -----------------------------*
+
+* (c) Copyright, WrdHrd Technologies Pvt. Ltd., 2021. All rights Reserved. *
+
+* -----------------------------------------------------------------------------*
+
+*/
+
 import {io} from 'socket.io-client';
 let socket;
 

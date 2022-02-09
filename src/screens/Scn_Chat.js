@@ -1,13 +1,42 @@
+/**
+
+* Brief : Brief Description of the file
+
+* Release : Release version (0.0.1)
+
+* Author : Sahibjot Singh
+
+* Written : 08/02/2022
+
+* Last Revision : 09/02/2022
+
+* ------------------------------- ChangeLog -----------------------------*
+
+* [Version] [Date dd/mm/yy] [INITIALS] [TICKET] [Description of work done]
+
+* ------------------------------- Modifications -----------------------------*
+
+* [Version] [Date dd/mm/yy] [INITIALS] [TICKET] [Description of work done]
+
+* ------------------------------- Includes -----------------------------*
+
+* relative/path/to/fle
+
+* ------------------------------- Called From -----------------------------*
+
+* BasicChatApp\App.js
+
+* ------------------------------- Copyright -----------------------------*
+
+* (c) Copyright, WrdHrd Technologies Pvt. Ltd., 2021. All rights Reserved. *
+
+* -----------------------------------------------------------------------------*
+
+*/
+
 /* 0.0.1 */
 import React, {useEffect, useState} from 'react';
-import {
-  View,
-  StyleSheet,
-  TextInput,
-  Button,
-  ScrollView,
-  Text,
-} from 'react-native';
+import {View, StyleSheet, TextInput, Button, ScrollView} from 'react-native';
 
 import {
   initiateSocket,
@@ -16,23 +45,25 @@ import {
   subscribeToChat,
 } from '../components/cmp_socket';
 
+import Message from '../components/cmp_message';
+
 const Scn_Chat = ({route}) => {
   const [message, setMessage] = useState(''); // Current message written by the user
   const [messages, setMessages] = useState([]); //Messages array- stores messages in form of object {msg:'',isSent:true/false}
   const {room, userName} = route.params;
 
-  /*useEffect(() => {
-    console.log(room, userName);
-    socket = io('http://192.168.18.7:3000', {autoConnect: false});
-    socket.auth = {userName};
-    socket.connect();
-    socket.on('connect', () => {
-      console.log('connected');
-    });
-    socket.emit('sendMessage', 'message');
-  }, [room]);*/
-
   /* 0.0.2 */
+
+  function generateRandom(min = 0, max = 1000) {
+    let difference = max - min;
+    let rand = Math.random();
+    rand = Math.floor(rand * difference);
+    rand = rand + min;
+    return rand;
+  }
+
+  console.log(generateRandom());
+
   useEffect(() => {
     initiateSocket(room, userName);
     subscribeToChat(({error, msg, by}) => {
@@ -53,11 +84,32 @@ const Scn_Chat = ({route}) => {
       <ScrollView style={styles.scrollView}>
         {messages.map(msg => {
           if (msg.by == 'Bot') {
-            return <Text style={{alignSelf: 'center'}}>{msg.msg}</Text>;
+            return (
+              <Message
+                key={generateRandom()}
+                by={msg.by}
+                msg={msg.msg}
+                style={{alignSelf: 'center'}}
+              />
+            );
           } else if (msg.isSent) {
-            return <Text style={{alignSelf: 'flex-end'}}>{msg.msg}</Text>;
+            return (
+              <Message
+                key={generateRandom()}
+                by={msg.by}
+                msg={msg.msg}
+                style={{alignSelf: 'flex-end'}}
+              />
+            );
           } else {
-            return <Text style={{alignSelf: 'flex-start'}}>{msg.msg}</Text>;
+            return (
+              <Message
+                key={generateRandom()}
+                by={msg.by}
+                msg={msg.msg}
+                style={{alignSelf: 'flex-start'}}
+              />
+            );
           }
         })}
       </ScrollView>
