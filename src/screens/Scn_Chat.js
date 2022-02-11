@@ -8,15 +8,17 @@
 
 * Written : 08/02/2022
 
-* Last Revision : 09/02/2022
+* Last Revision : 11/02/2022
 
 * ------------------------------- ChangeLog -----------------------------*
 
-* [Version] [Date dd/mm/yy] [INITIALS] [TICKET] [Description of work done]
+* [Version] [Date dd/mm/yy] [INITIALS] [TICKET] [Description of work done] 
 
 * ------------------------------- Modifications -----------------------------*
 
 * [Version] [Date dd/mm/yy] [INITIALS] [TICKET] [Description of work done]
+* [0.0.1] [11/02/2022] [] [] [Deleted some redundent code.]
+* [0.0.2] [11/02/2022] [] [] [Added border radius and margin to text box]
 
 * ------------------------------- Includes -----------------------------*
 
@@ -43,7 +45,7 @@ import {
   disconnectSocket,
   sendMessage,
   subscribeToChat,
-} from '../components/cmp_socket';
+} from '../socket.io/socket';
 
 import Message from '../components/cmp_message';
 
@@ -68,9 +70,6 @@ const Scn_Chat = ({route}) => {
     initiateSocket(room, userName);
     subscribeToChat(({error, msg, by}) => {
       if (error) return;
-      /*0.0.1 
-      setMessages([...messages, {msg, isSent: false, by}]); 
-      */
       setMessages(OldMessages => [...OldMessages, {msg, isSent: false, by}]);
     });
     return () => {
@@ -83,34 +82,22 @@ const Scn_Chat = ({route}) => {
     <View style={styles.parentView}>
       <ScrollView style={styles.scrollView}>
         {messages.map(msg => {
+          let style = {};
           if (msg.by == 'Bot') {
-            return (
-              <Message
-                key={generateRandom()}
-                by={msg.by}
-                msg={msg.msg}
-                style={{alignSelf: 'center'}}
-              />
-            );
+            style = {alignSelf: 'center'};
           } else if (msg.isSent) {
-            return (
-              <Message
-                key={generateRandom()}
-                by={msg.by}
-                msg={msg.msg}
-                style={{alignSelf: 'flex-end'}}
-              />
-            );
+            style = {alignSelf: 'flex-end'};
           } else {
-            return (
-              <Message
-                key={generateRandom()}
-                by={msg.by}
-                msg={msg.msg}
-                style={{alignSelf: 'flex-start'}}
-              />
-            );
+            style = {alignSelf: 'flex-start'};
           }
+          return (
+            <Message
+              key={generateRandom()}
+              by={msg.by}
+              msg={msg.msg}
+              style={style}
+            />
+          );
         })}
       </ScrollView>
       <View style={styles.textBoxViewStyle}>
@@ -146,6 +133,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     borderWidth: 1,
+    /* 0.0.2 */
+    borderRadius: 8,
+    margin: 5,
+    /* 0.0.2 */
   },
   textInputStyle: {
     flex: 1,
