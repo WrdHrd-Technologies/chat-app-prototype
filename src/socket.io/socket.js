@@ -8,7 +8,7 @@
 
 * Written : 08/02/2022
 
-* Last Revision : 09/02/2022
+* Last Revision : 03/03/2022
 
 * ------------------------------- ChangeLog -----------------------------*
 
@@ -38,7 +38,7 @@ import {io} from 'socket.io-client';
 let socket;
 
 export const initiateSocket = (room, userName) => {
-  socket = io('http://192.168.18.7:3000', {autoConnect: false});
+  socket = io('http://192.168.1.9:3000', {autoConnect: false});
   socket.auth = {userName};
   socket.connect();
   console.log('Connecting Socket...');
@@ -61,4 +61,8 @@ export const subscribeToChat = cb => {
 
 export const sendMessage = (room, message) => {
   if (socket) socket.emit('chat', {message, room});
+};
+
+export const sendAudio = (room, audio) => {
+  if (socket) socket.emit('voiceChat', {room, audio});
 };

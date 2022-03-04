@@ -8,7 +8,7 @@
 
 * Written : 08/02/2022
 
-* Last Revision : 11/02/2022
+* Last Revision : 03/03/2022
 
 * ------------------------------- ChangeLog -----------------------------*
 
@@ -45,13 +45,27 @@ import {
   disconnectSocket,
   sendMessage,
   subscribeToChat,
+  sendAudio,
 } from '../socket.io/socket';
 
 import Message from '../components/cmp_message';
 
+//utils
+import {
+  onPausePlay,
+  onStartPlay,
+  onStartRecord,
+  onStopPlay,
+  onStopRecord,
+  read,
+} from '../utils/audio';
+
 const Scn_Chat = ({route}) => {
   const [message, setMessage] = useState(''); // Current message written by the user
   const [messages, setMessages] = useState([]); //Messages array- stores messages in form of object {msg:'',isSent:true/false}
+
+  const [recordState, changeRecordState] = useState('record');
+  const [playState, changePlayState] = useState('play');
   const {room, userName} = route.params;
 
   /* 0.0.2 */
@@ -63,8 +77,6 @@ const Scn_Chat = ({route}) => {
     rand = rand + min;
     return rand;
   }
-
-  console.log(generateRandom());
 
   useEffect(() => {
     initiateSocket(room, userName);
@@ -100,6 +112,48 @@ const Scn_Chat = ({route}) => {
           );
         })}
       </ScrollView>
+      <Button
+        title={recordState}
+        onPress={() => {
+          if (recordState == 'record') {
+            changeRecordState('stop');
+            onStartRecord((currentPosition, mmss) => {
+              // setRecordSecs(currentPosition);
+              // setRecordTime(mmss);
+            });
+          } else {
+            changeRecordState('record');
+            onStopRecord();
+          }
+        }}
+      />
+      <Button
+        title={playState}
+        onPress={() => {
+          if (playState == 'play') {
+            changePlayState('stop');
+            onStartPlay(
+              (currentPositionSec, currentDurationSec, playTime, duration) => {
+                // setCurrentDurationSec(currentDurationSec);
+                // setCurrentPositionSec(currentPositionSec);
+                // setDuration(duration);
+                // setPlayTime(playTime);
+              },
+            );
+          } else {
+            changePlayState('play');
+            onStopPlay();
+          }
+        }}
+      />
+      <Button
+        title="Send"
+        onPress={async () => {
+          const data = await read();
+          // console.log(data);
+          sendAudio(room, data);
+        }}
+      />
       <View style={styles.textBoxViewStyle}>
         <TextInput
           style={styles.textInputStyle}

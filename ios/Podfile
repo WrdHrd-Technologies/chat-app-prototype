@@ -12,6 +12,10 @@ target 'BasicChatApp' do
     :hermes_enabled => false
   )
 
+  pod 'RNAudioRecorderPlayer', :path => '../node_modules/react-native-audio-recorder-player'
+
+  pod 'RNFS', :path => '../node_modules/react-native-fs'
+
   target 'BasicChatAppTests' do
     inherit! :complete
     # Pods for testing
