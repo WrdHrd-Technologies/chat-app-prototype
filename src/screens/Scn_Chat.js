@@ -38,13 +38,21 @@
 
 /* 0.0.1 */
 import React, {useEffect, useState} from 'react';
-import {View, StyleSheet, TextInput, Button, ScrollView} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  TextInput,
+  Button,
+  ScrollView,
+  Text,
+} from 'react-native';
 
 import {
   initiateSocket,
   disconnectSocket,
   sendMessage,
   subscribeToChat,
+  subscribeToAudio,
   sendAudio,
 } from '../socket.io/socket';
 
@@ -63,7 +71,7 @@ import {
 const Scn_Chat = ({route}) => {
   const [message, setMessage] = useState(''); // Current message written by the user
   const [messages, setMessages] = useState([]); //Messages array- stores messages in form of object {msg:'',isSent:true/false}
-
+  const [audioMessages, setAudMessages] = useState([]);
   const [recordState, changeRecordState] = useState('record');
   const [playState, changePlayState] = useState('play');
   const {room, userName} = route.params;
@@ -83,6 +91,13 @@ const Scn_Chat = ({route}) => {
     subscribeToChat(({error, msg, by}) => {
       if (error) return;
       setMessages(OldMessages => [...OldMessages, {msg, isSent: false, by}]);
+    });
+    subscribeToAudio(({error, audio, by, fileName}) => {
+      if (error) return;
+      setAudMessages(OldMessages => [
+        ...OldMessages,
+        {audio, by, fileName, isDownloaded: false},
+      ]);
     });
     return () => {
       disconnectSocket();
@@ -107,6 +122,26 @@ const Scn_Chat = ({route}) => {
               key={generateRandom()}
               by={msg.by}
               msg={msg.msg}
+              style={style}
+            />
+          );
+        })}
+      </ScrollView>
+      <ScrollView style={styles.parentView}>
+        {audioMessages.map(msg => {
+          let style = {};
+          if (msg.by == 'Bot') {
+            style = {alignSelf: 'center'};
+          } else if (msg.isSent) {
+            style = {alignSelf: 'flex-end'};
+          } else {
+            style = {alignSelf: 'flex-start'};
+          }
+          return (
+            <Message
+              key={generateRandom()}
+              by={msg.by}
+              msg={msg.fileName}
               style={style}
             />
           );

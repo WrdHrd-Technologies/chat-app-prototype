@@ -59,6 +59,13 @@ export const subscribeToChat = cb => {
   });
 };
 
+export const subscribeToAudio = cb => {
+  if (!socket) return true;
+  socket.on('audio', ({audio, userName, fileName}) => {
+    console.log(`filename=${fileName}`);
+    return cb({error: null, audio, fileName, by: userName});
+  });
+};
 export const sendMessage = (room, message) => {
   if (socket) socket.emit('chat', {message, room});
 };
